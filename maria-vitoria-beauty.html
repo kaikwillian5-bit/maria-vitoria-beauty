@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#A24F63">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Maria Vitória Beauty — Agenda</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FBF3EF;
+    --surface:#FFFFFF;
+    --ink:#3B2233;
+    --ink-soft:#7A5C68;
+    --primary:#A24F63;
+    --primary-dark:#7C3B4B;
+    --accent-gold:#C69B4B;
+    --blush:#F3D9DE;
+    --blush-soft:#FCEEEF;
+    --line:#E9D6CE;
+    --danger:#B0524A;
+    --radius:14px;
+    --shadow: 0 10px 30px -12px rgba(122,60,75,0.25);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(1200px 600px at 15% -10%, #FDEDEE 0%, transparent 60%),
+      radial-gradient(1000px 500px at 110% 10%, #F6E2D8 0%, transparent 55%),
+      var(--bg);
+    color:var(--ink);
+    font-family:'Jost', sans-serif;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+  html{-webkit-text-size-adjust:100%;}
+  .wrap{
+    max-width:920px;margin:0 auto;
+    padding:28px 20px calc(80px + env(safe-area-inset-bottom));
+    padding-left:max(20px, env(safe-area-inset-left));
+    padding-right:max(20px, env(safe-area-inset-right));
+  }
+
+  /* ---------- Header ---------- */
+  header{
+    display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:28px;
+    position:sticky;top:0;z-index:20;padding:14px 0;
+    background:linear-gradient(var(--bg) 78%, transparent);
+  }
+  .brand{display:flex;align-items:center;gap:14px;}
+  .mono{width:54px;height:54px;flex-shrink:0;}
+  .brand-text{display:flex;flex-direction:column;line-height:1;}
+  .brand-text .name{font-family:'Cormorant Garamond', serif;font-style:italic;font-weight:600;font-size:28px;color:var(--primary-dark);}
+  .brand-text .sub{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--accent-gold);margin-top:4px;font-weight:500;}
+
+  nav{
+    display:flex;gap:4px;background:var(--surface);padding:5px;border-radius:999px;box-shadow:var(--shadow);
+    max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;
+  }
+  nav::-webkit-scrollbar{display:none;}
+  nav button{
+    border:none;background:transparent;padding:11px 18px;border-radius:999px;white-space:nowrap;flex-shrink:0;
+    font-family:'Jost',sans-serif;font-size:14px;font-weight:500;color:var(--ink-soft);
+    cursor:pointer;transition:all .25s ease;position:relative;min-height:44px;
+  }
+  nav button.active{background:var(--primary);color:#fff;box-shadow:0 4px 12px -3px rgba(162,79,99,.55);}
+  nav button:not(.active):hover{color:var(--primary-dark);}
+
+  /* ---------- Cards / layout ---------- */
+  .card{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);padding:26px;margin-bottom:20px;border:1px solid var(--line);}
+  .card h2{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:600;font-size:24px;margin:0 0 4px;color:var(--primary-dark);}
+  .card .hint{font-size:13px;color:var(--ink-soft);margin:0 0 20px;}
+
+  .divider{height:1px;background:linear-gradient(90deg, transparent, var(--line) 20%, var(--accent-gold) 50%, var(--line) 80%, transparent);margin:18px 0;}
+
+  /* ---------- Forms ---------- */
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;}
+  label{display:block;font-size:12px;letter-spacing:.5px;color:var(--ink-soft);margin-bottom:6px;text-transform:uppercase;font-weight:500;}
+  input, select, textarea{
+    width:100%;padding:13px 13px;border:1.5px solid var(--line);border-radius:9px;
+    font-family:'Jost',sans-serif;font-size:16px;color:var(--ink);background:#fffdfc;
+    transition:border-color .2s ease, box-shadow .2s ease;
+    min-height:46px;
+  }
+  textarea{min-height:70px;}
+  select{-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%237A5C68'%3E%3Cpath d='M5.5 7.5l4.5 4.5 4.5-4.5' stroke='%237A5C68' stroke-width='1.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:34px;}
+  input:focus, select:focus, textarea:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(162,79,99,.15);}
+  textarea{resize:vertical;min-height:60px;}
+  .field{margin-bottom:4px;}
+
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;justify-content:center;
+    border:none;border-radius:999px;padding:13px 26px;font-family:'Jost',sans-serif;
+    font-size:15px;font-weight:500;cursor:pointer;transition:all .2s ease;
+    min-height:46px;
+  }
+  .btn-primary{background:var(--primary);color:#fff;box-shadow:0 6px 16px -6px rgba(162,79,99,.6);}
+  .btn-primary:hover{background:var(--primary-dark);transform:translateY(-1px);}
+  .btn-ghost{background:transparent;color:var(--ink-soft);border:1.5px solid var(--line);}
+  .btn-ghost:hover{border-color:var(--primary);color:var(--primary-dark);}
+  .btn-danger-text{background:none;border:none;color:var(--danger);font-size:12.5px;cursor:pointer;text-decoration:underline;padding:10px 4px;font-family:'Jost',sans-serif;min-height:44px;}
+  .btn-small{padding:8px 16px;font-size:13px;}
+
+  /* ---------- Agenda ---------- */
+  .day-nav{display:flex;align-items:center;gap:10px;margin-bottom:22px;flex-wrap:wrap;}
+  .day-nav input[type=date]{width:auto;flex:1;min-width:150px;}
+  .icon-btn{width:44px;height:44px;border-radius:50%;border:1.5px solid var(--line);background:#fff;cursor:pointer;font-size:16px;color:var(--primary-dark);display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;}
+  .icon-btn:hover{background:var(--blush-soft);border-color:var(--primary);}
+
+  .appt-item{
+    display:flex;gap:16px;align-items:center;padding:16px;border-radius:12px;
+    background:var(--blush-soft);border:1px solid var(--blush);margin-bottom:12px;
+  }
+  .appt-time{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:22px;color:var(--primary-dark);min-width:66px;text-align:center;}
+  .appt-info{flex:1;min-width:0;}
+  .appt-info .client{font-weight:500;font-size:15.5px;color:var(--ink);}
+  .appt-info .service{font-size:13px;color:var(--ink-soft);margin-top:2px;}
+  .appt-info .notes{font-size:12.5px;color:var(--ink-soft);font-style:italic;margin-top:4px;}
+  .appt-price{font-weight:500;color:var(--accent-gold);font-size:14.5px;white-space:nowrap;}
+
+  .empty{text-align:center;padding:40px 20px;color:var(--ink-soft);}
+  .empty svg{margin-bottom:12px;opacity:.7;}
+  .empty p{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:18px;margin:0;}
+
+  /* ---------- Serviços ---------- */
+  .svc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin-top:18px;}
+  .svc-card{border:1px solid var(--line);border-radius:12px;padding:16px;background:#fffdfc;position:relative;}
+  .svc-card .name{font-weight:500;font-size:15px;margin-bottom:6px;padding-right:20px;}
+  .svc-card .meta{font-size:12.5px;color:var(--ink-soft);display:flex;gap:10px;}
+  .svc-card .meta span{display:flex;align-items:center;gap:4px;}
+  .svc-actions{display:flex;gap:14px;margin-top:12px;}
+  .svc-actions button{font-size:12px;background:none;border:none;cursor:pointer;color:var(--ink-soft);font-family:'Jost',sans-serif;text-decoration:underline;padding:0;}
+  .svc-actions button:hover{color:var(--primary-dark);}
+
+  .toast{
+    position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);
+    background:var(--primary-dark);color:#fff;padding:12px 22px;border-radius:999px;
+    font-size:13.5px;box-shadow:0 10px 25px -8px rgba(0,0,0,.4);opacity:0;pointer-events:none;
+    transition:all .3s ease;z-index:100;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  @media (max-width:640px){
+    .wrap{padding-top:16px;}
+    .card{padding:20px 16px;}
+    .grid{grid-template-columns:1fr;}
+    .svc-grid{grid-template-columns:1fr;}
+  }
+
+  @media (max-width:520px){
+    header{flex-direction:column;align-items:flex-start;gap:14px;}
+    nav{width:100%;}
+    .brand .mono{width:46px;height:46px;}
+    .brand-text .name{font-size:24px;}
+    .appt-item{flex-wrap:wrap;padding:14px;}
+    .appt-time{min-width:auto;text-align:left;}
+    .appt-info{order:3;flex-basis:100%;}
+    .appt-price{width:auto;margin-left:auto;}
+    .day-nav{gap:8px;}
+    .day-nav input[type=date]{min-width:0;}
+    #apptForm .btn, #svcForm .btn{width:100%;margin-left:0 !important;margin-top:10px;}
+    .svc-actions button{min-height:32px;}
+  }
+
+  @media (hover:none){
+    .btn-primary:hover, .btn-ghost:hover, .icon-btn:hover{transform:none;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <svg class="mono" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="32" cy="32" r="30" stroke="#C69B4B" stroke-width="1.4"/>
+        <path d="M32 10 C 34 18, 34 18, 32 26 C 30 18, 30 18, 32 10 Z" fill="#F3D9DE" opacity="0.8"/>
+        <text x="32" y="40" text-anchor="middle" font-family="Cormorant Garamond, serif" font-style="italic" font-weight="600" font-size="24" fill="#A24F63">MV</text>
+      </svg>
+      <div class="brand-text">
+        <span class="name">Maria Vitória</span>
+        <span class="sub">Beauty · Agenda</span>
+      </div>
+    </div>
+    <nav>
+      <button class="tab-btn active" data-tab="agenda">Agenda</button>
+      <button class="tab-btn" data-tab="marcar">Nova marcação</button>
+      <button class="tab-btn" data-tab="servicos">Serviços</button>
+    </nav>
+  </header>
+
+  <!-- AGENDA -->
+  <section id="tab-agenda">
+    <div class="card">
+      <h2>Agenda do dia</h2>
+      <p class="hint">Veja os horários marcados para a data selecionada.</p>
+      <div class="day-nav">
+        <button class="icon-btn" id="prevDay">‹</button>
+        <input type="date" id="agendaDate">
+        <button class="icon-btn" id="nextDay">›</button>
+        <button class="btn btn-ghost btn-small" id="todayBtn">Hoje</button>
+      </div>
+      <div id="agendaList"></div>
+    </div>
+  </section>
+
+  <!-- NOVA MARCAÇÃO -->
+  <section id="tab-marcar" style="display:none;">
+    <div class="card">
+      <h2>Nova marcação</h2>
+      <p class="hint">Preencha os dados da cliente e do serviço.</p>
+      <form id="apptForm">
+        <div class="grid">
+          <div class="field">
+            <label>Nome da cliente</label>
+            <input type="text" id="apptClient" required>
+          </div>
+          <div class="field">
+            <label>Telefone</label>
+            <input type="tel" id="apptPhone" placeholder="(00) 00000-0000">
+          </div>
+          <div class="field">
+            <label>Serviço</label>
+            <select id="apptService" required></select>
+          </div>
+          <div class="field">
+            <label>Data</label>
+            <input type="date" id="apptDate" required>
+          </div>
+          <div class="field">
+            <label>Horário</label>
+            <input type="time" id="apptTime" required>
+          </div>
+        </div>
+        <div class="field" style="margin-top:14px;">
+          <label>Observações</label>
+          <textarea id="apptNotes" placeholder="Alguma preferência ou detalhe importante..."></textarea>
+        </div>
+        <div class="divider"></div>
+        <button type="submit" class="btn btn-primary">Confirmar marcação</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- SERVIÇOS -->
+  <section id="tab-servicos" style="display:none;">
+    <div class="card">
+      <h2>Serviços oferecidos</h2>
+      <p class="hint">Cadastre os serviços do salão com duração e valor.</p>
+      <form id="svcForm">
+        <div class="grid">
+          <div class="field">
+            <label>Nome do serviço</label>
+            <input type="text" id="svcName" required placeholder="Ex: Manicure">
+          </div>
+          <div class="field">
+            <label>Duração (min)</label>
+            <input type="number" id="svcDuration" required min="5" step="5" placeholder="60">
+          </div>
+          <div class="field">
+            <label>Valor (R$)</label>
+            <input type="number" id="svcPrice" required min="0" step="0.01" placeholder="80.00">
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary" style="margin-top:16px;" id="svcSubmitBtn">Adicionar serviço</button>
+        <button type="button" class="btn btn-ghost" style="margin-top:16px; margin-left:8px; display:none;" id="svcCancelEdit">Cancelar edição</button>
+      </form>
+      <div class="divider"></div>
+      <div class="svc-grid" id="svcGrid"></div>
+    </div>
+  </section>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  const state = { services: [], appointments: [] };
+  let editingServiceId = null;
+
+  const toastEl = document.getElementById('toast');
+  function toast(msg){
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    setTimeout(()=>toastEl.classList.remove('show'), 2200);
+  }
+
+  function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+  function fmtMoney(v){ return 'R$ ' + Number(v).toFixed(2).replace('.', ','); }
+  function todayISO(){ const d=new Date(); d.setMinutes(d.getMinutes()-d.getTimezoneOffset()); return d.toISOString().slice(0,10); }
+
+  const STORAGE_KEY = 'mvb-data';
+
+  async function loadData(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if(raw){
+        const parsed = JSON.parse(raw);
+        state.services = parsed.services || [];
+        state.appointments = parsed.appointments || [];
+      }
+    }catch(e){
+      // sem dados salvos ainda, ou navegador bloqueando armazenamento local
+    }
+  }
+
+  async function saveData(){
+    try{
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }catch(e){
+      toast('Não foi possível salvar neste navegador.');
+    }
+  }
+
+  /* ---------- Tabs ---------- */
+  const tabButtons = document.querySelectorAll('.tab-btn');
+  const tabSections = {
+    agenda: document.getElementById('tab-agenda'),
+    marcar: document.getElementById('tab-marcar'),
+    servicos: document.getElementById('tab-servicos'),
+  };
+  tabButtons.forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      tabButtons.forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      Object.keys(tabSections).forEach(k=>tabSections[k].style.display='none');
+      tabSections[btn.dataset.tab].style.display='block';
+      if(btn.dataset.tab==='agenda') renderAgenda();
+      if(btn.dataset.tab==='marcar') populateServiceSelect();
+    });
+  });
+
+  /* ---------- Serviços ---------- */
+  const svcForm = document.getElementById('svcForm');
+  const svcGrid = document.getElementById('svcGrid');
+  const svcSubmitBtn = document.getElementById('svcSubmitBtn');
+  const svcCancelEdit = document.getElementById('svcCancelEdit');
+
+  function renderServices(){
+    svcGrid.innerHTML = '';
+    if(state.services.length===0){
+      svcGrid.innerHTML = `<div class="empty" style="grid-column:1/-1;">
+        <p>Nenhum serviço cadastrado ainda.</p>
+      </div>`;
+      return;
+    }
+    state.services.forEach(s=>{
+      const card = document.createElement('div');
+      card.className = 'svc-card';
+      card.innerHTML = `
+        <div class="name">${escapeHtml(s.name)}</div>
+        <div class="meta"><span>⏱ ${s.duration} min</span><span>· ${fmtMoney(s.price)}</span></div>
+        <div class="svc-actions">
+          <button data-action="edit" data-id="${s.id}">Editar</button>
+          <button data-action="delete" data-id="${s.id}">Excluir</button>
+        </div>`;
+      svcGrid.appendChild(card);
+    });
+  }
+
+  svcGrid.addEventListener('click', async (e)=>{
+    const btn = e.target.closest('button');
+    if(!btn) return;
+    const id = btn.dataset.id;
+    if(btn.dataset.action==='delete'){
+      state.services = state.services.filter(s=>s.id!==id);
+      await saveData();
+      renderServices();
+      toast('Serviço removido.');
+    } else if(btn.dataset.action==='edit'){
+      const s = state.services.find(s=>s.id===id);
+      if(!s) return;
+      document.getElementById('svcName').value = s.name;
+      document.getElementById('svcDuration').value = s.duration;
+      document.getElementById('svcPrice').value = s.price;
+      editingServiceId = id;
+      svcSubmitBtn.textContent = 'Salvar alterações';
+      svcCancelEdit.style.display = 'inline-flex';
+      window.scrollTo({top:0, behavior:'smooth'});
+    }
+  });
+
+  svcCancelEdit.addEventListener('click', ()=>{
+    editingServiceId = null;
+    svcForm.reset();
+    svcSubmitBtn.textContent = 'Adicionar serviço';
+    svcCancelEdit.style.display = 'none';
+  });
+
+  svcForm.addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    const name = document.getElementById('svcName').value.trim();
+    const duration = parseInt(document.getElementById('svcDuration').value, 10);
+    const price = parseFloat(document.getElementById('svcPrice').value);
+    if(!name || !duration || isNaN(price)) return;
+
+    if(editingServiceId){
+      const s = state.services.find(s=>s.id===editingServiceId);
+      s.name = name; s.duration = duration; s.price = price;
+      toast('Serviço atualizado.');
+      editingServiceId = null;
+      svcSubmitBtn.textContent = 'Adicionar serviço';
+      svcCancelEdit.style.display = 'none';
+    } else {
+      state.services.push({ id: uid(), name, duration, price });
+      toast('Serviço adicionado.');
+    }
+    svcForm.reset();
+    await saveData();
+    renderServices();
+    populateServiceSelect();
+  });
+
+  /* ---------- Nova marcação ---------- */
+  const apptForm = document.getElementById('apptForm');
+  const apptServiceSelect = document.getElementById('apptService');
+
+  function populateServiceSelect(){
+    apptServiceSelect.innerHTML = '';
+    if(state.services.length===0){
+      apptServiceSelect.innerHTML = '<option value="">Cadastre um serviço primeiro</option>';
+      return;
+    }
+    state.services.forEach(s=>{
+      const opt = document.createElement('option');
+      opt.value = s.id;
+      opt.textContent = `${s.name} — ${fmtMoney(s.price)} (${s.duration} min)`;
+      apptServiceSelect.appendChild(opt);
+    });
+  }
+
+  document.getElementById('apptDate').value = todayISO();
+
+  apptForm.addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    if(state.services.length===0){
+      toast('Cadastre ao menos um serviço antes de marcar.');
+      return;
+    }
+    const appt = {
+      id: uid(),
+      client: document.getElementById('apptClient').value.trim(),
+      phone: document.getElementById('apptPhone').value.trim(),
+      serviceId: apptServiceSelect.value,
+      date: document.getElementById('apptDate').value,
+      time: document.getElementById('apptTime').value,
+      notes: document.getElementById('apptNotes').value.trim(),
+    };
+    state.appointments.push(appt);
+    await saveData();
+    apptForm.reset();
+    document.getElementById('apptDate').value = todayISO();
+    populateServiceSelect();
+    toast('Marcação confirmada!');
+    // leva para a agenda do dia marcado
+    document.getElementById('agendaDate').value = appt.date;
+    tabButtons.forEach(b=>b.classList.remove('active'));
+    document.querySelector('[data-tab="agenda"]').classList.add('active');
+    Object.keys(tabSections).forEach(k=>tabSections[k].style.display='none');
+    tabSections.agenda.style.display = 'block';
+    renderAgenda();
+  });
+
+  /* ---------- Agenda ---------- */
+  const agendaDateInput = document.getElementById('agendaDate');
+  const agendaList = document.getElementById('agendaList');
+  agendaDateInput.value = todayISO();
+
+  document.getElementById('prevDay').addEventListener('click', ()=>{
+    shiftDate(-1);
+  });
+  document.getElementById('nextDay').addEventListener('click', ()=>{
+    shiftDate(1);
+  });
+  document.getElementById('todayBtn').addEventListener('click', ()=>{
+    agendaDateInput.value = todayISO();
+    renderAgenda();
+  });
+  agendaDateInput.addEventListener('change', renderAgenda);
+
+  function shiftDate(delta){
+    const d = new Date(agendaDateInput.value + 'T00:00:00');
+    d.setDate(d.getDate()+delta);
+    agendaDateInput.value = d.toISOString().slice(0,10);
+    renderAgenda();
+  }
+
+  function renderAgenda(){
+    const date = agendaDateInput.value;
+    const dayAppts = state.appointments
+      .filter(a=>a.date===date)
+      .sort((a,b)=> a.time.localeCompare(b.time));
+
+    if(dayAppts.length===0){
+      agendaList.innerHTML = `<div class="empty">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+          <path d="M20 6 C22 14, 22 14, 20 22 C18 14, 18 14, 20 6 Z" fill="#F3D9DE"/>
+          <circle cx="20" cy="26" r="2" fill="#C69B4B"/>
+        </svg>
+        <p>Nenhuma marcação para este dia.</p>
+      </div>`;
+      return;
+    }
+
+    agendaList.innerHTML = '';
+    dayAppts.forEach(a=>{
+      const svc = state.services.find(s=>s.id===a.serviceId);
+      const item = document.createElement('div');
+      item.className = 'appt-item';
+      item.innerHTML = `
+        <div class="appt-time">${a.time}</div>
+        <div class="appt-info">
+          <div class="client">${escapeHtml(a.client)}${a.phone ? ' · '+escapeHtml(a.phone) : ''}</div>
+          <div class="service">${svc ? escapeHtml(svc.name) : '(serviço removido)'}${svc ? ' · '+svc.duration+' min' : ''}</div>
+          ${a.notes ? `<div class="notes">${escapeHtml(a.notes)}</div>` : ''}
+        </div>
+        <div class="appt-price">${svc ? fmtMoney(svc.price) : ''}</div>
+        <button class="btn-danger-text" data-id="${a.id}">excluir</button>
+      `;
+      agendaList.appendChild(item);
+    });
+  }
+
+  agendaList.addEventListener('click', async (e)=>{
+    const btn = e.target.closest('button.btn-danger-text');
+    if(!btn) return;
+    state.appointments = state.appointments.filter(a=>a.id!==btn.dataset.id);
+    await saveData();
+    renderAgenda();
+    toast('Marcação excluída.');
+  });
+
+  function escapeHtml(str){
+    const d = document.createElement('div');
+    d.textContent = str;
+    return d.innerHTML;
+  }
+
+  /* ---------- Init ---------- */
+  (async function init(){
+    await loadData();
+    if(state.services.length===0){
+      // serviços de exemplo para começar
+      state.services = [
+        { id: uid(), name:'Manicure', duration:60, price:45 },
+        { id: uid(), name:'Escova', duration:50, price:60 },
+        { id: uid(), name:'Design de sobrancelhas', duration:30, price:35 },
+      ];
+      await saveData();
+    }
+    renderServices();
+    populateServiceSelect();
+    renderAgenda();
+  })();
+})();
+</script>
+</body>
+</html>
